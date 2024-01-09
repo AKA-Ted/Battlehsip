@@ -30,15 +30,12 @@ int main() {
         exit(EXIT_FAILURE);
     }
 
-    // Recibir mensaje de bienvenida del servidor
-    if (recv(client_socket, message, sizeof(message), 0) == -1) {
-        perror("Error al recibir datos del servidor");
-        exit(EXIT_FAILURE);
-    }
-    printf("%s\n", message);
-
     while (1) {
-        recv(client_socket, message, sizeof(message), 0)
+        // Recibir mensaje de bienvenida del servidor
+        if (recv(client_socket, message, sizeof(message), 0) == -1) {
+            perror("Error al recibir datos del servidor");
+            exit(EXIT_FAILURE);
+        }   
         printf("%s\n", message);
 
         printf("ingrese una cadena para enviar al server: ");

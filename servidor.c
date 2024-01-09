@@ -1,124 +1,156 @@
-#include <ctype.h>
-#include <stdbool.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <arpa/inet.h>
 
+#define PORT 12345
+#define MAX_PLAYERS 2
 #define BOARD_SIZE 5
-#define NUM_SHIPS 3
 
-// Función para inicializar el tablero con agua ('~')
-void init_board(char board[BOARD_SIZE][BOARD_SIZE]) {
-    for (int i = 0; i < BOARD_SIZE; i++) {
-        for (int j = 0; j < BOARD_SIZE; j++) {
-            board[i][j] = '~';
+typedef struct {
+    char board[BOARD_SIZE][BOARD_SIZE];
+    int hits;
+} Player;
+
+typedef struct {
+    int sockfd;
+    char name[20];
+    Player player;
+} GameClient;
+
+void initializeBoard(Player *player) {
+    for (int i = 0; i < BOARD_SIZE; ++i) {
+        for (int j = 0; j < BOARD_SIZE; ++j) {
+            player->board[i][j] = ' ';
         }
     }
+    player->hits = 0;
 }
 
-// Función para imprimir el tablero
-void print_board(char board[BOARD_SIZE][BOARD_SIZE]) {
-    printf("   ");
-        for (char c = 'A'; c < 'A' + BOARD_SIZE; c++) {
-            printf("%c ", c);
-        }
-    printf("\n");
-
-    for (int i = 0; i < BOARD_SIZE; i++) {
-        printf("%2d ", i + 1);
-        for (int j = 0; j < BOARD_SIZE; j++) {
-            printf("%c ", board[i][j]);
+void printBoard(Player *player) {
+    printf("Tabla de juego:\n");
+    for (int i = 0; i < BOARD_SIZE; ++i) {
+        for (int j = 0; j < BOARD_SIZE; ++j) {
+            printf("%c ", player->board[i][j]);
         }
         printf("\n");
     }
+    printf("\n");
 }
 
-// Función para colocar los barcos en el tablero
-void place_ships(char board[BOARD_SIZE][BOARD_SIZE],
-                 bool enemy_ships[BOARD_SIZE][BOARD_SIZE]) {
-    int num_ships_placed = 0;
+int checkWinner(Player *player) {
+    return player->hits >= (BOARD_SIZE * BOARD_SIZE) / 2;
+}
 
-    while (num_ships_placed < NUM_SHIPS) {
-        char x_char;
-        int y;
-        printf("\nColoca el barco %d\n", num_ships_placed + 1);
-        printf("Ingresa la coordenada (por ejemplo, A5): ");
-        scanf(" %c%d", &x_char, &y);
-
-        int x = toupper(x_char) - 'A'; // Convertir letra a índice
-        y--;                           // Ajustar el índice a partir de 0
-
-        if (x >= 0 && x < BOARD_SIZE && y >= 0 && y < BOARD_SIZE &&
-            board[y][x] == '~') {
-            board[y][x] = 'S';
-            num_ships_placed++;
-            enemy_ships[y][x] = true;
-            printf("Barco colocado en la posición (%c, %d)\n", 'A' + x, y + 1);
-        } else {
-            printf("Posición inválida. Inténtalo de nuevo.\n");
-        }
+void notifyPlayers(GameClient *clients[]) {
+    for (int i = 0; i < MAX_PLAYERS; ++i) {
+        char message[50];
+        sprintf(message, "Hola %s, ya te has conectado. ¡Que empiece la batalla naval!\n", clients[i]->name);
+        write(clients[i]->sockfd, message, strlen(message));
     }
 }
 
-bool is_game_over(bool ships[BOARD_SIZE][BOARD_SIZE]) {
-    int count = 0;
-    for (int i = 0; i < BOARD_SIZE; i++) {
-        for (int j = 0; j < BOARD_SIZE; j++) {
-            if (ships[i][j]) {
-                count++;
+void playGame(GameClient *clients[]) {
+    while (1) {
+        for (int i = 0; i < MAX_PLAYERS; ++i) {
+            printBoard(&clients[i]->player);
+
+            char message[50];
+            sprintf(message, "Es tu turno, %s. Introduce las coordenadas (fila columna): ", clients[i]->name);
+            write(clients[i]->sockfd, message, strlen(message));
+
+            char buffer[256];
+            read(clients[i]->sockfd, buffer, sizeof(buffer));
+
+            int row, col;
+            sscanf(buffer, "%d %d", &row, &col);
+
+            if (row < 0 || row >= BOARD_SIZE || col < 0 || col >= BOARD_SIZE || clients[i]->player.board[row][col] != ' ') {
+                write(clients[i]->sockfd, "Movimiento inválido. Intenta de nuevo.\n", 38);
+                --i;  // Repeat the turn for the same player
+                continue;
             }
-        }
-    }
-  return count == NUM_SHIPS;
-}
 
-void play_game(char player_board[BOARD_SIZE][BOARD_SIZE],
-               bool enemy_ships[BOARD_SIZE][BOARD_SIZE]) {
-    while (!is_game_over(enemy_ships)) {
-        printf("\nDispara al barco enemigo!\n");
-        print_board(player_board);
+            if (clients[i]->player.board[row][col] == 'O') {
+                write(clients[i]->sockfd, "Ya has disparado en esta posición. Intenta de nuevo.\n", 50);
+                --i;  // Repeat the turn for the same player
+                continue;
+            }
 
-        char x_char;
-        int y;
-        printf("Ingresa la coordenada a disparar (por ejemplo, A5): ");
-        scanf(" %c%d", &x_char, &y);
-
-        int x = toupper(x_char) - 'A'; // Convertir letra a índice
-        y--;                           // Ajustar el índice a partir de 0
-
-        if (x >= 0 && x < BOARD_SIZE && y >= 0 && y < BOARD_SIZE) {
-            if (enemy_ships[y][x]) {
-                printf("¡Impacto! Has alcanzado un barco enemigo en la posición (%c, "
-                    "%d)!\n",
-                    'A' + x, y + 1);
-                player_board[y][x] =
-                    'X'; // Marcamos el impacto en el tablero del jugador
-                enemy_ships[y][x] = false; // "Hundimos" el barco enemigo
+            if (clients[i == 0 ? 1 : 0]->player.board[row][col] == 'X') {
+                write(clients[i]->sockfd, "¡Has alcanzado un barco enemigo!\n", 33);
+                clients[i]->player.hits++;
             } else {
-                printf("Disparo al agua en la posición (%c, %d).\n", 'A' + x, y + 1);
-                player_board[y][x] =
-                    'O'; // Marcamos el disparo al agua en el tablero del jugador
+                write(clients[i]->sockfd, "¡Has fallado! No hay barco en esta posición.\n", 44);
             }
-        } else {
-            printf("Disparo fuera de los límites. Inténtalo de nuevo.\n");
+
+            clients[i]->player.board[row][col] = 'O';
+
+            if (checkWinner(&clients[i]->player)) {
+                sprintf(message, "¡Felicidades %s! ¡Eres el ganador!\n", clients[i]->name);
+                write(clients[i]->sockfd, message, strlen(message));
+
+                sprintf(message, "¡Lo siento %s! Has perdido.\n", clients[i == 0 ? 1 : 0]->name);
+                write(clients[i == 0 ? 1 : 0]->sockfd, message, strlen(message));
+
+                close(clients[0]->sockfd);
+                close(clients[1]->sockfd);
+                exit(0);
+            }
         }
     }
-    printf("\n¡Felicidades! ¡Has hundido todos los barcos enemigos!\n");
 }
 
 int main() {
-    char player_board[BOARD_SIZE][BOARD_SIZE];
+    int serverSocket, clientSocket;
+    struct sockaddr_in serverAddr, clientAddr;
+    socklen_t addrSize = sizeof(struct sockaddr_in);
 
-    // Matriz para registrar la ubicación de los barcos enemigos
-    bool enemy_ships[BOARD_SIZE][BOARD_SIZE] = {false};
+    GameClient *clients[MAX_PLAYERS];
 
-    init_board(player_board);
-    printf("¡Bienvenido a Battleship!\n");
-    print_board(player_board);
-    printf("Coloca tus barcos:\n");
-    place_ships(player_board, enemy_ships);
+    // Inicializar el servidor
+    serverSocket = socket(AF_INET, SOCK_STREAM, 0);
+    if (serverSocket < 0) {
+        perror("Error al crear el socket del servidor");
+        exit(EXIT_FAILURE);
+    }
 
-    printf("\nComienza el juego:\n");
-    print_board(player_board);
-    //play_game(player_board, enemy_ships);
+    serverAddr.sin_family = AF_INET;
+    serverAddr.sin_addr.s_addr = INADDR_ANY;
+    serverAddr.sin_port = htons(PORT);
+
+    if (bind(serverSocket, (struct sockaddr *)&serverAddr, sizeof(serverAddr)) < 0) {
+        perror("Error en el enlace");
+        exit(EXIT_FAILURE);
+    }
+
+    listen(serverSocket, MAX_PLAYERS);
+    printf("Esperando a que los jugadores se conecten...\n");
+
+    // Aceptar conexiones de clientes
+    for (int i = 0; i < MAX_PLAYERS; ++i) {
+        clientSocket = accept(serverSocket, (struct sockaddr *)&clientAddr, &addrSize);
+        if (clientSocket < 0) {
+            perror("Error al aceptar la conexión del cliente");
+            exit(EXIT_FAILURE);
+        }
+
+        clients[i] = (GameClient *)malloc(sizeof(GameClient));
+        clients[i]->sockfd = clientSocket;
+
+        printf("Cliente %d conectado. Introduce tu nombre: ", i + 1);
+        read(clientSocket, clients[i]->name, sizeof(clients[i]->name));
+        clients[i]->name[strlen(clients[i]->name) - 1] = '\0';  // Remove newline character
+
+        initializeBoard(&clients[i]->player);
+    }
+
+    // Notificar a los jugadores que se han conectado
+    notifyPlayers(clients);
+
+    // Iniciar el juego
+    playGame(clients);
 
     return 0;
 }

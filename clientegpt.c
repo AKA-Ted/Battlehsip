@@ -119,9 +119,9 @@ int main() {
         recv(client_socket, player_board, sizeof(player_board), 0);
         print_board(player_board);
 
-        printf("Dispara al barco enemigo");
-        printf("Ingresa la coordenada a disparar (por ejemplo, A5): ");
-        scanf(" %c%d", &x_char, &y);
+        printf("Dispara al barco enemigo\n");
+        printf("Ingresa la coordenada a disparar (por ejemplo, A5): \n");
+        scanf("%c%d", &x_char, &y);
 
         x = toupper(x_char) - 'A'; // Convertir letra a índice
         y--;                       // Ajustar el índice a partir de 0

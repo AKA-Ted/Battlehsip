@@ -12,6 +12,22 @@
 #define NUM_SHIPS 3
 
 // Función para colocar los barcos en el tablero
+void print_board(char board[BOARD_SIZE][BOARD_SIZE]) {
+    printf("   ");
+    for (char c = 'A'; c < 'A' + BOARD_SIZE; c++) {
+        printf("%c ", c);
+    }
+    printf("\n");
+
+    for (int i = 0; i < BOARD_SIZE; i++) {
+        printf("%2d ", i + 1);
+        for (int j = 0; j < BOARD_SIZE; j++) {
+            printf("%c ", board[i][j]);
+        }
+        printf("\n");
+    }
+}
+
 void place_ships(char board[BOARD_SIZE][BOARD_SIZE],
                  bool enemy_ships[BOARD_SIZE][BOARD_SIZE]) {
     int num_ships_placed = 0;
@@ -36,22 +52,6 @@ void place_ships(char board[BOARD_SIZE][BOARD_SIZE],
             printf("Posición inválida. Inténtalo de nuevo.\n");
         }
     }
-}
-
-void print_board(char board[BOARD_SIZE][BOARD_SIZE]) {
-  printf("   ");
-  for (char c = 'A'; c < 'A' + BOARD_SIZE; c++) {
-    printf("%c ", c);
-  }
-  printf("\n");
-
-  for (int i = 0; i < BOARD_SIZE; i++) {
-    printf("%2d ", i + 1);
-    for (int j = 0; j < BOARD_SIZE; j++) {
-      printf("%c ", board[i][j]);
-    }
-    printf("\n");
-  }
 }
 
 int main() {
@@ -84,16 +84,16 @@ int main() {
     }
 
     // Recibir mensaje de bienvenida del servidor
-    recv(client_socket, message, strlen(message), 0);
+    recv(client_socket, message, sizeof(message), 0);
     printf("%s\n", message);
 
-    recv(client_socket, message, strlen(message), 0);
+    recv(client_socket, message, sizeof(message), 0);
     printf("%s\n", message);
 
-    recv(client_socket, message, strlen(message), 0);
+    recv(client_socket, message, sizeof(message), 0);
     printf("%s\n", message);
 
-    recv(client_socket, player_board_1, strlen(player_board_1), 0);
+    recv(client_socket, player_board_1, sizeof(player_board_1), 0);
     print_board(player_board_1);
 
     place_ships(player_board_1, enemy_ships_player_1);

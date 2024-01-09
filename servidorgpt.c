@@ -138,7 +138,7 @@ int main() {
         printf("Jugador %d conectado\n", i + 1);
 
         // Enviar mensaje de bienvenida al cliente
-        send(client_socket[i], "Bienvenido", strlen(chat), 0);
+        send(client_socket[i], "Bienvenido", sizeof(chat), 0);
     }
 
     //Empieza el juego 
@@ -148,11 +148,11 @@ int main() {
     init_board(game_board_2);
 
     for (int i = 0; i < MAX_CONNECTIONS; ++i) {
-        send(client_socket[i], "Comienza el juego", strlen(chat), 0);
-        send(client_socket[i], "Coloca tus barcos", strlen(chat), 0);
-        send(client_socket[i], player_board_1, strlen(player_board_1), 0);
-        recv(client_socket[i], player_board_1, strlen(player_board_1), 0);
-        recv(client_socket[i], enemy_ships_player_1, strlen(enemy_ships_player_1), 0);
+        send(client_socket[i], "Comienza el juego", sizeof(chat), 0);
+        send(client_socket[i], "Coloca tus barcos", sizeof(chat), 0);
+        send(client_socket[i], player_board_1, sizeof(player_board_1), 0);
+        recv(client_socket[i], player_board_1, sizeof(player_board_1), 0);
+        recv(client_socket[i], enemy_ships_player_1, sizeof(enemy_ships_player_1), 0);
     }
 
 

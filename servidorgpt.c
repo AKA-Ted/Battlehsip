@@ -161,7 +161,7 @@ int main() {
     int intentos = 1;
     while (!is_game_over(enemy_ships_player_1, enemy_ships_player_2)){
         sprintf(chat, "Turno No. %d", intentos);
-        printf("%c\n", chat);
+        printf("%s\n", chat);
         if (turno == 1 ){
             send(client_socket[0], chat, sizeof(chat), 0);
 

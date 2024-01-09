@@ -190,9 +190,11 @@ int main() {
     }
 
     if (winner(enemy_ships_player_1, enemy_ships_player_2) == 1) {
+        printf("Ganó el jugador 1\n");
         send(client_socket[0], "Ganaste", sizeof(chat), 0);
         send(client_socket[1], "Perdiste", sizeof(chat), 0);
     } else if (winner(enemy_ships_player_1, enemy_ships_player_2) == 2){
+        printf("Ganó el jugador 2\n");
         send(client_socket[0], "Ganaste", sizeof(chat), 0);
         send(client_socket[1], "Perdiste", sizeof(chat), 0);
     }

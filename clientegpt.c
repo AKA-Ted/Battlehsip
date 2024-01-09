@@ -11,7 +11,7 @@ int main() {
     int client_socket;
     struct sockaddr_in server_address;
     char message[1024];
-    char chat[1024]
+    char chat[1024];
 
     // Crear el socket
     client_socket = socket(AF_INET, SOCK_STREAM, 0);

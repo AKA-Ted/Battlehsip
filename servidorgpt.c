@@ -39,36 +39,39 @@ void print_board(char board[BOARD_SIZE][BOARD_SIZE]) {
 
 // Funcion para terminar el juego 
 bool is_game_over(bool enemy_ships_player_1[BOARD_SIZE][BOARD_SIZE], bool enemy_ships_player_2[BOARD_SIZE][BOARD_SIZE]) {
-    int ships_1, ships_2 = 0;
+    int remaining_ships_player_1, remaining_ships_player_2 = 0;
     for (int i = 0; i < BOARD_SIZE; i++) {
         for (int j = 0; j < BOARD_SIZE; j++) {
             if (enemy_ships_player_1[i][j]) {
-                ships_1++;
+                remaining_ships_player_1++;
             }
             if (enemy_ships_player_2[i][j]) {
-                ships_2++;
+                remaining_ships_player_2++;
             }
         }
     }
-    return (ships_1 == 0 || ships_2 == 0) ;
+    printf("Al jugador 1 le falta tirar %d\n", remaining_ships_player_1);
+    printf("Al jugador 2 le falta tirar %d\n", remaining_ships_player_2);
+
+    return (remaining_ships_player_1 == 0 || remaining_ships_player_2 == 0) ;
 }
 
 // Funcion para determinar el ganador
 int winner(bool enemy_ships_player_1[BOARD_SIZE][BOARD_SIZE], bool enemy_ships_player_2[BOARD_SIZE][BOARD_SIZE]) {
-    int ships_1, ships_2 = 0;
+    int remaining_ships_player_1, remaining_ships_player_2 = 0;
     for (int i = 0; i < BOARD_SIZE; i++) {
         for (int j = 0; j < BOARD_SIZE; j++) {
             if (enemy_ships_player_1[i][j]) {
-                ships_1++;
+                remaining_ships_player_1++;
             }
             if (enemy_ships_player_2[i][j]) {
-                ships_2++;
+                remaining_ships_player_2++;
             }
         }
     }
-    if (ships_1 == 0 ) {
+    if (remaining_ships_player_1 == 0 ) {
         return 2;
-    } else if (ships_2 == 0) {
+    } else if (remaining_ships_player_2 == 0) {
         return 1;
     }
 }

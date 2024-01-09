@@ -94,6 +94,7 @@ int main() {
     int y;
     int x;
     char message_winner[] = "Ganaste";
+    char message_losser[] = "Perdiste";
 
     //Battleships
     char player_board[BOARD_SIZE][BOARD_SIZE];
@@ -152,8 +153,7 @@ int main() {
         recv(client_socket, message, sizeof(message), 0);
         printf("%s\n", message);
         
-        if (strcmp(message, message_winner) == 0){
-            printf("JAJAJAJA\n");
+        if (strcmp(message, message_winner) == 0 || strcmp(message, message_losser) == 0 ){
             break;
         }
         recv(client_socket, player_board, sizeof(player_board), 0);

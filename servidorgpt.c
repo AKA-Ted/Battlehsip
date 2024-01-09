@@ -53,6 +53,7 @@ bool is_game_over(bool player_ships_1[BOARD_SIZE][BOARD_SIZE], bool player_ships
     return (ships_1 == 0 || ships_2 == 0) ;
 }
 
+// Funcion para determinar el ganador
 int winner(bool player_ships_1[BOARD_SIZE][BOARD_SIZE], bool player_ships_2[BOARD_SIZE][BOARD_SIZE]) {
     int ships_1, ships_2 = 0;
     for (int i = 0; i < BOARD_SIZE; i++) {
@@ -169,6 +170,7 @@ int main() {
             recv(client_socket[0], game_board_1, sizeof(game_board_1), 0);
             recv(client_socket[0], enemy_ships_player_2, sizeof(enemy_ships_player_2), 0);
             
+            printf("Tablero Jugador 1\n");
             print_board(game_board_1);
         } else {
             send(client_socket[1], chat, sizeof(chat), 0);
@@ -179,6 +181,7 @@ int main() {
             recv(client_socket[1], game_board_2, sizeof(game_board_2), 0);
             recv(client_socket[1], enemy_ships_player_1, sizeof(enemy_ships_player_1), 0);
             
+            printf("Tablero Jugador 2\n");
             print_board(game_board_2);
             
             intentos++;

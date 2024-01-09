@@ -151,7 +151,6 @@ int main() {
     print_board(player_board);
 
     while (1) {
-        printf("Tu turno\n");
         // Recibir mensaje de que coloque el barco
         recv(client_socket, message, sizeof(message), 0);
         printf("%s\n", message);
@@ -166,6 +165,8 @@ int main() {
 
         send(client_socket, player_board, sizeof(player_board), 0);
         send(client_socket, enemy_ships_player, sizeof(enemy_ships_player), 0);
+        
+        printf("Espera al oponente\n");
     }
 
     // Cerrar conexión

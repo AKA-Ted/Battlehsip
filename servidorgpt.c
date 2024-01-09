@@ -68,7 +68,7 @@ int winner(bool player_ships_1[BOARD_SIZE][BOARD_SIZE], bool player_ships_2[BOAR
     }
     if (ships_1 == 0 ) {
         return 1;
-    } else {
+    } else if (ships_2 == 0) {
         return 2;
     }
 }

@@ -56,7 +56,7 @@ char* play_game(char player_board[BOARD_SIZE][BOARD_SIZE],
                bool enemy_ships[BOARD_SIZE][BOARD_SIZE],
                int x, int y) {
     print_board(player_board);
-    char mensaje[];
+    char mensaje[1024];
 
     if (x >= 0 && x < BOARD_SIZE && y >= 0 && y < BOARD_SIZE) {
         if (enemy_ships[y][x]) {

@@ -149,7 +149,7 @@ int main() {
         printf("Tu turno");
 
         recv(client_socket, player_board, sizeof(player_board), 0);
-        recv(client_socket, enemy_ships, sizeof(enemy_ships), 0);
+        recv(client_socket, enemy_ships_player, sizeof(enemy_ships_player), 0);
         print_board(player_board);
         
         play_game(player_board, enemy_ships);

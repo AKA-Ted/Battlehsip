@@ -38,18 +38,18 @@ void print_board(char board[BOARD_SIZE][BOARD_SIZE]) {
 }
 
 bool is_game_over(bool player_ships_1[BOARD_SIZE][BOARD_SIZE], bool player_ships_2[BOARD_SIZE][BOARD_SIZE]) {
-    int player_ships_1, player_ships_2 = 0;
+    int ships_1, ships_2 = 0;
     for (int i = 0; i < BOARD_SIZE; i++) {
         for (int j = 0; j < BOARD_SIZE; j++) {
             if (player_ships_1[i][j]) {
-                player_ships_1++;
+                ship_1++;
             }
             if (player_ships_2[i][j]) {
-                player_ships_2++;
+                ships_2++;
             }
         }
     }
-    return (player_ships_1 == 0 || player_ships_2 == 0) ;
+    return (ships_1 == 0 || ships_2 == 0) ;
 }
 
 char* play_game(char player_board[BOARD_SIZE][BOARD_SIZE],
@@ -60,11 +60,11 @@ char* play_game(char player_board[BOARD_SIZE][BOARD_SIZE],
 
     if (x >= 0 && x < BOARD_SIZE && y >= 0 && y < BOARD_SIZE) {
         if (enemy_ships[y][x]) {
-            mensaje = "¡Impacto! Has alcanzado un barco enemigo en la posición (%c, %d)!\n",'A' + x, y + 1;
+            mensaje = "¡Impacto! Has alcanzado un barco enemigo en la posición (%c, %d)!\n", ('A' + x), (y + 1);
             player_board[y][x] = 'X'; // Marcamos el impacto en el tablero del jugador
             enemy_ships[y][x] = false; // "Hundimos" el barco enemigo
         } else {
-            mensaje = "Disparo al agua en la posición (%c, %d).\n", 'A' + x, y + 1;
+            mensaje = "Disparo al agua en la posición (%c, %d).\n", ('A' + x), (y + 1);
             player_board[y][x] = 'O'; // Marcamos el disparo al agua en el tablero del jugador
         }
     } else {
@@ -157,7 +157,7 @@ int main() {
     print_board(player_board_1);
     print_board(player_board_2);
 
-    mensaje = "\n¡Felicidades! ¡Has hundido todos los barcos enemigos!\n";
+    int turno = 1;
     while (!is_game_over(enemy_ships_1, enemy_ships_2)){
         if (turno == 1 ){
             send(client_socket[0], game_board_1, sizeof(game_board_1), 0);

@@ -37,51 +37,41 @@ void print_board(char board[BOARD_SIZE][BOARD_SIZE]) {
     }
 }
 
-bool is_game_over(bool ships[BOARD_SIZE][BOARD_SIZE]) {
-    int count = 0;
+bool is_game_over(bool player_ships_1[BOARD_SIZE][BOARD_SIZE], bool player_ships_2[BOARD_SIZE][BOARD_SIZE]) {
+    int player_ships_1, player_ships_2 = 0;
     for (int i = 0; i < BOARD_SIZE; i++) {
         for (int j = 0; j < BOARD_SIZE; j++) {
-            if (ships[i][j]) {
-                printf("HAY BARCO EN %d %d", i, j);
-                count++;
+            if (player_ships_1[i][j]) {
+                player_ships_1++;
+            }
+            if (player_ships_2[i][j]) {
+                player_ships_2++;
             }
         }
     }
-    return count == 0;
+    return (player_ships_1 == 0 || player_ships_2 == 0) ;
 }
 
-void play_game(char player_board[BOARD_SIZE][BOARD_SIZE],
-               bool enemy_ships[BOARD_SIZE][BOARD_SIZE]) {
-    while (!is_game_over(enemy_ships)) {
-        printf("\nDispara al barco enemigo!\n");
-        print_board(player_board);
+char* play_game(char player_board[BOARD_SIZE][BOARD_SIZE],
+               bool enemy_ships[BOARD_SIZE][BOARD_SIZE],
+               int x, int y) {
+    print_board(player_board);
+    char mensaje[1024];
 
-        char x_char;
-        int y;
-        printf("Ingresa la coordenada a disparar (por ejemplo, A5): ");
-        scanf(" %c%d", &x_char, &y);
-
-        int x = toupper(x_char) - 'A'; // Convertir letra a índice
-        y--;                           // Ajustar el índice a partir de 0
-
-        if (x >= 0 && x < BOARD_SIZE && y >= 0 && y < BOARD_SIZE) {
-            if (enemy_ships[y][x]) {
-                printf("¡Impacto! Has alcanzado un barco enemigo en la posición (%c, "
-                    "%d)!\n",
-                    'A' + x, y + 1);
-                player_board[y][x] =
-                    'X'; // Marcamos el impacto en el tablero del jugador
-                enemy_ships[y][x] = false; // "Hundimos" el barco enemigo
-            } else {
-                printf("Disparo al agua en la posición (%c, %d).\n", 'A' + x, y + 1);
-                player_board[y][x] =
-                    'O'; // Marcamos el disparo al agua en el tablero del jugador
-            }
+    if (x >= 0 && x < BOARD_SIZE && y >= 0 && y < BOARD_SIZE) {
+        if (enemy_ships[y][x]) {
+            mensaje = "¡Impacto! Has alcanzado un barco enemigo en la posición (%c, %d)!\n",'A' + x, y + 1;
+            player_board[y][x] = 'X'; // Marcamos el impacto en el tablero del jugador
+            enemy_ships[y][x] = false; // "Hundimos" el barco enemigo
         } else {
-            printf("Disparo fuera de los límites. Inténtalo de nuevo.\n");
+            mensaje = "Disparo al agua en la posición (%c, %d).\n", 'A' + x, y + 1;
+            player_board[y][x] = 'O'; // Marcamos el disparo al agua en el tablero del jugador
         }
+    } else {
+        mensaje = "Disparo fuera de los límites. Inténtalo de nuevo.\n";
     }
-    printf("\n¡Felicidades! ¡Has hundido todos los barcos enemigos!\n");
+    
+    return mensaje;
 }
 
 int main() {
@@ -96,6 +86,7 @@ int main() {
     char player_board_2[BOARD_SIZE][BOARD_SIZE];
     char game_board_1[BOARD_SIZE][BOARD_SIZE];
     char game_board_2[BOARD_SIZE][BOARD_SIZE];
+    int y, x; 
 
     // Matriz para registrar la ubicación de los barcos enemigos
     bool enemy_ships_player_1[BOARD_SIZE][BOARD_SIZE] = {false};
@@ -166,11 +157,25 @@ int main() {
     print_board(player_board_1);
     print_board(player_board_2);
 
-    while (1) {
-        for (int i = 0; i < MAX_CONNECTIONS; ++i) {
+    mensaje = "\n¡Felicidades! ¡Has hundido todos los barcos enemigos!\n";
+    while (!is_game_over(enemy_ships_1, enemy_ships_2)){
+        if (turno == 1 ){
+            send(client_socket[0], game_board_1, sizeof(game_board_1), 0);
+            recv(client_socket[0], x, sizeof(x), 0);
+            recv(client_socket[0], y, sizeof(y), 0);
+            char* mensaje = play_game(game_board_1, enemy_ships_2, x, y);
+            send(client_socket[0], mensaje, sizeof(mensaje), 0);
+            send(client_socket[0], game_board_1, sizeof(game_board_1), 0);
 
+        } else {
+            send(client_socket[0], game_board_2, sizeof(game_board_2), 0);
+            recv(client_socket[0], x, sizeof(x), 0);
+            recv(client_socket[0], y, sizeof(y), 0);
+            char* mensaje = play_game(game_board_2, enemy_ships_1, x, y);
+            send(client_socket[0], mensaje, sizeof(mensaje), 0);
+            send(client_socket[0], game_board_2, sizeof(game_board_2), 0);
         }
- //       turno = (turno == 1) ? 2 : 1;
+        turno = (turno == 1) ? 2 : 1;
     }
 
     // Cerrar conexiones

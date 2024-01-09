@@ -54,16 +54,21 @@ void place_ships(char board[BOARD_SIZE][BOARD_SIZE],
     }
 }
 
+
 int main() {
     int client_socket;
     struct sockaddr_in server_address;
     char message[1024];
+    int turno = 1; 
+    char x_char;
+    int y;
+    int x 
 
     //Battleships
-    char player_board_1[BOARD_SIZE][BOARD_SIZE];
+    char player_board[BOARD_SIZE][BOARD_SIZE];
 
     // Matriz para registrar la ubicación de los barcos enemigos
-    bool enemy_ships_player_1[BOARD_SIZE][BOARD_SIZE] = {false};
+    bool enemy_ships_player[BOARD_SIZE][BOARD_SIZE] = {false};
 
     // Crear el socket
     client_socket = socket(AF_INET, SOCK_STREAM, 0);
@@ -100,22 +105,35 @@ int main() {
     printf("%s\n", message);
 
     // Recibe el tablero
-    recv(client_socket, player_board_1, sizeof(player_board_1), 0);
-    print_board(player_board_1);
-    
-    place_ships(player_board_1, enemy_ships_player_1);
+    recv(client_socket, player_board, sizeof(player_board), 0);
+    print_board(player_board);
 
-    send(client_socket, player_board_1, sizeof(player_board_1), 0);
-    send(client_socket, enemy_ships_player_1, sizeof(enemy_ships_player_1), 0);
+    place_ships(player_board, enemy_ships_player);
 
-    print_board(player_board_1);
+    send(client_socket, player_board, sizeof(player_board), 0);
+    send(client_socket, enemy_ships_player, sizeof(enemy_ships_player), 0);
+
+    print_board(player_board);
 
     while (1) {
-        
+        recv(client_socket, player_board, sizeof(player_board), 0);
+        print_board(player_board);
 
+        printf("Dispara al barco enemigo");
+        printf("Ingresa la coordenada a disparar (por ejemplo, A5): ");
+        scanf(" %c%d", &x_char, &y);
+
+        x = toupper(x_char) - 'A'; // Convertir letra a índice
+        y--;                       // Ajustar el índice a partir de 0
+        send(client_socket, x, sizeof(x), 0);
+        send(client_socket, y, sizeof(y), 0);
+
+        recv(client_socket, message, sizeof(message), 0);
+        printf("%s\n", message);
+
+        recv(client_socket, player_board, sizeof(player_board), 0);
+        print_board(player_board);
     }
-
-    // Lógica del juego (aquí puedes implementar la interacción del usuario para el juego Battleship)
 
     // Cerrar conexión
     close(client_socket);

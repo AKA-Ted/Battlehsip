@@ -30,7 +30,7 @@ void print_board(char board[BOARD_SIZE][BOARD_SIZE]) {
 // Función para asignar los barcos en el tablero
 void place_ships(char board[BOARD_SIZE][BOARD_SIZE],
                  bool enemy_ships[BOARD_SIZE][BOARD_SIZE]) {
-    int num_ships_placed == 0;
+    int num_ships_placed = 0;
     int num_ships;
     
     printf("Ingresa cuantos barcos deseas colocar\n");

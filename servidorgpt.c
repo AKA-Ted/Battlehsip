@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
+#include <stdbool.h>
 #include <unistd.h>
 #include <arpa/inet.h>
 
@@ -162,7 +164,7 @@ int main() {
     print_board(player_board_1);
 
     while (1) {
-        for (int i = 0; i < MAX_PLAYERS; ++i) {
+        for (int i = 0; i < MAX_CONNECTIONS; ++i) {
 
         }
  //       turno = (turno == 1) ? 2 : 1;

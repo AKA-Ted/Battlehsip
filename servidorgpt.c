@@ -179,7 +179,7 @@ int main() {
         turno = (turno == 1) ? 2 : 1;
     }
 
-    if (winner == 1) {
+    if (winner(enemy_ships_player_1, enemy_ships_player_2) == 1) {
         send(client_socket[0], "Ganaste", sizeof(chat), 0);
         send(client_socket[1], "Perdiste", sizeof(chat), 0);
     } else {

@@ -58,9 +58,10 @@ int main() {
     while (1) {
         for (int i = 0; i < MAX_CONNECTIONS; ++i) {
             recv(client_socket[i], chat, 1024, 0);
-            printf("El jugador %d dijo: %s\n", (i+1), chat);
             // Aquí puedes procesar el mensaje recibido del cliente
         }
+        
+        printf("El jugador %d dijo: %s\n", (i+1), chat);
     }
 
     // Cerrar conexiones

@@ -32,8 +32,8 @@ void place_ships(char board[BOARD_SIZE][BOARD_SIZE],
                  bool enemy_ships[BOARD_SIZE][BOARD_SIZE]) {
     int num_ships;
     
-    printf("Ingresa cuantos barcos deseas colocar: ");
-    scanf(" %d", &num_ships);
+    printf("Ingresa cuantos barcos deseas colocar\n");
+    scanf("%d", &num_ships);
 
     while (num_ships_placed < NUM_SHIPS) {
         char x_char;

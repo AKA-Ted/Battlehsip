@@ -157,8 +157,11 @@ int main() {
     print_board(player_board_2);
 
     int turno = 1;
+    int intentos = 1;
     while (!is_game_over(enemy_ships_player_1, enemy_ships_player_2)){
         if (turno == 1 ){
+            send((client_socket[i], "Turno #%d", sizeof(chat), 0), intentos);
+
             send(client_socket[0], game_board_1, sizeof(game_board_1), 0);
             send(client_socket[0], enemy_ships_player_2, sizeof(enemy_ships_player_2), 0);
 
@@ -166,6 +169,7 @@ int main() {
             recv(client_socket[0], enemy_ships_player_2, sizeof(enemy_ships_player_2), 0);
             
             print_board(game_board_1);
+            intentos++;
 
         } else {
             send(client_socket[1], game_board_2, sizeof(game_board_2), 0);

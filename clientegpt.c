@@ -125,8 +125,8 @@ int main() {
 
         x = toupper(x_char) - 'A'; // Convertir letra a índice
         y--;                       // Ajustar el índice a partir de 0
-        send(client_socket, x, sizeof(x), 0);
-        send(client_socket, y, sizeof(y), 0);
+        send(client_socket, x, 1, 0);
+        send(client_socket, y, 1, 0);
 
         recv(client_socket, message, sizeof(message), 0);
         printf("%s\n", message);

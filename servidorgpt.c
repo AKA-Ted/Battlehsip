@@ -56,7 +56,7 @@ char* play_game(char player_board[BOARD_SIZE][BOARD_SIZE],
                bool enemy_ships[BOARD_SIZE][BOARD_SIZE],
                int x, int y) {
     print_board(player_board);
-    char mensaje[1024];
+    char mensaje[];
 
     if (x >= 0 && x < BOARD_SIZE && y >= 0 && y < BOARD_SIZE) {
         if (enemy_ships[y][x]) {
@@ -64,18 +64,18 @@ char* play_game(char player_board[BOARD_SIZE][BOARD_SIZE],
             enemy_ships[y][x] = false; // "Hundimos" el barco enemigo
             x = 'A' + x;
             y++;
-            mensaje[1024] = "¡Impacto! Has alcanzado un barco enemigo en la posición (%c, %d)!\n", x, y;
+            mensaje = "¡Impacto! Has alcanzado un barco enemigo en la posición (%c, %d)!\n", x, y;
         } else {
             player_board[y][x] = 'O'; // Marcamos el disparo al agua en el tablero del jugador
             x = 'A' + x;
             y++;
-            mensaje[1024] = "Disparo al agua en la posición (%c, %d).\n", x, y;
+            mensaje = "Disparo al agua en la posición (%c, %d).\n", x, y;
         }
     } else {
-        mensaje[1024] = "Disparo fuera de los límites. Inténtalo de nuevo.\n";
+        mensaje* = "Disparo fuera de los límites. Inténtalo de nuevo.\n";
     }
     
-    return mensaje[1024];
+    return mensaje;
 }
 
 int main() {

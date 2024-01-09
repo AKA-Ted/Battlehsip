@@ -42,7 +42,7 @@ bool is_game_over(bool player_ships_1[BOARD_SIZE][BOARD_SIZE], bool player_ships
     for (int i = 0; i < BOARD_SIZE; i++) {
         for (int j = 0; j < BOARD_SIZE; j++) {
             if (player_ships_1[i][j]) {
-                ship_1++;
+                ships_1++;
             }
             if (player_ships_2[i][j]) {
                 ships_2++;
@@ -167,7 +167,7 @@ int main() {
             send(client_socket[0], game_board_1, sizeof(game_board_1), 0);
             recv(client_socket[0], x, sizeof(x), 0);
             recv(client_socket[0], y, sizeof(y), 0);
-            char* mensaje = play_game(game_board_1, enemy_ships_2, x, y);
+            char* mensaje = play_game(game_board_1, enemy_ships_player_2, x, y);
             send(client_socket[0], mensaje, sizeof(mensaje), 0);
             send(client_socket[0], game_board_1, sizeof(game_board_1), 0);
 
@@ -175,7 +175,7 @@ int main() {
             send(client_socket[0], game_board_2, sizeof(game_board_2), 0);
             recv(client_socket[0], x, sizeof(x), 0);
             recv(client_socket[0], y, sizeof(y), 0);
-            char* mensaje = play_game(game_board_2, enemy_ships_1, x, y);
+            char* mensaje = play_game(game_board_2, enemy_ships_player_1, x, y);
             send(client_socket[0], mensaje, sizeof(mensaje), 0);
             send(client_socket[0], game_board_2, sizeof(game_board_2), 0);
         }

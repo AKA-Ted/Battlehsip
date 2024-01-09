@@ -139,6 +139,7 @@ int main() {
 
         // Enviar mensaje de bienvenida al cliente
         send(client_socket[i], "Bienvenido", sizeof(chat), 0);
+        send(client_socket[i], "Espera a tu oponente", sizeof(chat), 0);
     }
 
     //Empieza el juego 
@@ -150,13 +151,20 @@ int main() {
     for (int i = 0; i < MAX_CONNECTIONS; ++i) {
         send(client_socket[i], "Comienza el juego", sizeof(chat), 0);
         send(client_socket[i], "Coloca tus barcos", sizeof(chat), 0);
-        send(client_socket[i], player_board_1, sizeof(player_board_1), 0);
-        recv(client_socket[i], player_board_1, sizeof(player_board_1), 0);
-        recv(client_socket[i], enemy_ships_player_1, sizeof(enemy_ships_player_1), 0);
+        if ( i == 0 ){
+            send(client_socket[i], player_board_1, sizeof(player_board_1), 0);
+            recv(client_socket[i], player_board_1, sizeof(player_board_1), 0);
+            recv(client_socket[i], enemy_ships_player_1, sizeof(enemy_ships_player_1), 0);
+        } else {
+            send(client_socket[i], player_board_2, sizeof(player_board_2), 0);
+            recv(client_socket[i], player_board_2, sizeof(player_board_2), 0);
+            recv(client_socket[i], enemy_ships_player_2, sizeof(enemy_ships_player_2), 0);
+        }
     }
 
-
+    // Revisar que esté bien la información
     print_board(player_board_1);
+    print_board(player_board_2);
 
     while (1) {
         for (int i = 0; i < MAX_CONNECTIONS; ++i) {

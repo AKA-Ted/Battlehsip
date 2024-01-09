@@ -37,6 +37,7 @@ void print_board(char board[BOARD_SIZE][BOARD_SIZE]) {
     }
 }
 
+// Funcion para terminar el juego 
 bool is_game_over(bool player_ships_1[BOARD_SIZE][BOARD_SIZE], bool player_ships_2[BOARD_SIZE][BOARD_SIZE]) {
     int ships_1, ships_2 = 0;
     for (int i = 0; i < BOARD_SIZE; i++) {
@@ -50,6 +51,25 @@ bool is_game_over(bool player_ships_1[BOARD_SIZE][BOARD_SIZE], bool player_ships
         }
     }
     return (ships_1 == 0 || ships_2 == 0) ;
+}
+
+int winner(bool player_ships_1[BOARD_SIZE][BOARD_SIZE], bool player_ships_2[BOARD_SIZE][BOARD_SIZE]) {
+    int ships_1, ships_2 = 0;
+    for (int i = 0; i < BOARD_SIZE; i++) {
+        for (int j = 0; j < BOARD_SIZE; j++) {
+            if (player_ships_1[i][j]) {
+                ships_1++;
+            }
+            if (player_ships_2[i][j]) {
+                ships_2++;
+            }
+        }
+    }
+    if (ships_1 == 0 ) {
+        return 1;
+    } else {
+        return 2;
+    }
 }
 
 
@@ -145,7 +165,7 @@ int main() {
             recv(client_socket[0], game_board_1, sizeof(game_board_1), 0);
             recv(client_socket[0], enemy_ships_player_2, sizeof(enemy_ships_player_2), 0);
             
-            print_board(player_board_1);
+            print_board(game_board_1);
 
         } else {
             send(client_socket[1], game_board_2, sizeof(game_board_2), 0);
@@ -154,9 +174,17 @@ int main() {
             recv(client_socket[1], game_board_2, sizeof(game_board_2), 0);
             recv(client_socket[1], enemy_ships_player_1, sizeof(enemy_ships_player_1), 0);
             
-            print_board(player_board_2);
+            print_board(game_board_2);
         }
         turno = (turno == 1) ? 2 : 1;
+    }
+
+    if (winner == 1) {
+        send(client_socket[0], "Ganaste", sizeof(chat), 0);
+        send(client_socket[1], "Perdiste", sizeof(chat), 0);
+    } else {
+        send(client_socket[0], "Perdiste", sizeof(chat), 0);
+        send(client_socket[1], "Ganaste", sizeof(chat), 0);
     }
 
     // Cerrar conexiones

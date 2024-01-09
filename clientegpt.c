@@ -152,7 +152,7 @@ int main() {
         recv(client_socket, enemy_ships_player, sizeof(enemy_ships_player), 0);
         print_board(player_board);
         
-        play_game(player_board, enemy_ships);
+        play_game(player_board, enemy_ships_player);
 
         send(client_socket, player_board, sizeof(player_board), 0);
         send(client_socket, enemy_ships_player, sizeof(enemy_ships_player), 0);

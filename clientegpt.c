@@ -93,17 +93,11 @@ int main() {
     recv(client_socket, message, strlen(message), 0);
     printf("%s\n", message);
 
-    recv(client_socket, message, strlen(message), 0); 
-    printf("%s\n", message);
-
-    recv(client_socket, message, strlen(message), 0);
-    printf("%s\n", message);
-
     recv(client_socket, player_board_1, strlen(player_board_1), 0);
     print_board(player_board_1);
 
     place_ships(player_board_1, enemy_ships_player_1);
-    
+
     send(client_socket, player_board_1, sizeof(player_board_1), 0);
     send(client_socket, enemy_ships_player_1, sizeof(enemy_ships_player_1), 0);
 

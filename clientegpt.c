@@ -30,12 +30,12 @@ void print_board(char board[BOARD_SIZE][BOARD_SIZE]) {
 // Función para asignar los barcos en el tablero
 void place_ships(char board[BOARD_SIZE][BOARD_SIZE],
                  bool enemy_ships[BOARD_SIZE][BOARD_SIZE]) {
-    int num_ships;
+    int num_ships_placed, num_ships = 0;
     
     printf("Ingresa cuantos barcos deseas colocar\n");
     scanf("%d", &num_ships);
 
-    while (num_ships_placed < NUM_SHIPS) {
+    while (num_ships_placed < num_ships) {
         char x_char;
         int y;
         printf("\nColoca el barco %d\n", num_ships_placed + 1);

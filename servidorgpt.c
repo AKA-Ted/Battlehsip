@@ -141,14 +141,20 @@ int main() {
         if (turno == 1 ){
             send(client_socket[0], game_board_1, sizeof(game_board_1), 0);
             send(client_socket[0], enemy_ships_player_2, sizeof(enemy_ships_player_2), 0);
+
             recv(client_socket[0], game_board_1, sizeof(game_board_1), 0);
             recv(client_socket[0], enemy_ships_player_2, sizeof(enemy_ships_player_2), 0);
+            
+            print_board(player_board_1);
 
         } else {
+            send(client_socket[1], game_board_2, sizeof(game_board_2), 0);
+            send(client_socket[1], enemy_ships_player_1, sizeof(enemy_ships_player_1), 0);
+
             recv(client_socket[1], game_board_2, sizeof(game_board_2), 0);
             recv(client_socket[1], enemy_ships_player_1, sizeof(enemy_ships_player_1), 0);
-            recv(client_socket[1], game_board_2, sizeof(game_board_2), 0);
-            recv(client_socket[1], enemy_ships_player_1, sizeof(enemy_ships_player_1), 0);
+            
+            print_board(player_board_2);
         }
         turno = (turno == 1) ? 2 : 1;
     }

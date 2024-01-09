@@ -71,9 +71,9 @@ int winner(bool enemy_ships_player_1[BOARD_SIZE][BOARD_SIZE], bool enemy_ships_p
             }
         }
     }
-    if (remaining_ships_player_1 == 0 ) {
+    if (remaining_ships_player_1 == 0 && remaining_ships_player_2 > 0) {
         return 2;
-    } else if (remaining_ships_player_2 == 0) {
+    } else if (remaining_ships_player_2 == 0 && remaining_ships_player_1 > 0) {
         return 1;
     }
 }

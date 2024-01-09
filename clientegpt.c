@@ -37,6 +37,15 @@ int main() {
     }
     printf("%s\n", message);
 
+    while (1) {
+        recv(client_socket, message, sizeof(message), 0)
+        printf("%s\n", message);
+
+        printf("ingrese una cadena para enviar al server: ");
+        scanf("%*c%[^\n]", message);
+        send(client_socket, message, sizeof(message), 0);
+    }
+
     // Lógica del juego (aquí puedes implementar la interacción del usuario para el juego Battleship)
 
     // Cerrar conexión

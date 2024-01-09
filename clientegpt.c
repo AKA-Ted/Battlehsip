@@ -93,6 +93,7 @@ int main() {
     char x_char;
     int y;
     int x;
+    char message_winner[] = "Ganaste";
 
     //Battleships
     char player_board[BOARD_SIZE][BOARD_SIZE];
@@ -146,11 +147,15 @@ int main() {
     print_board(player_board);
 
     while (1) {
-        printf("Tu turno");
+        printf("Tu turno\n");
         // Recibir mensaje de que coloque el barco
         recv(client_socket, message, sizeof(message), 0);
         printf("%s\n", message);
-
+        
+        if (strcmp(message, message_winner) == 0){
+            printf("JAJAJAJA\n");
+            break;
+        }
         recv(client_socket, player_board, sizeof(player_board), 0);
         recv(client_socket, enemy_ships_player, sizeof(enemy_ships_player), 0);
         

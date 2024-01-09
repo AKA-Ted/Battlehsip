@@ -159,7 +159,7 @@ int main() {
     int turno = 1;
     int intentos = 1;
     while (!is_game_over(enemy_ships_player_1, enemy_ships_player_2)){
-        chat[1024] = ("Turno No. %d", intentos);
+        sprintf(chat, "Turno No. %d", intentos);
         if (turno == 1 ){
             send(client_socket[0], chat, sizeof(chat), 0);
 
@@ -190,8 +190,8 @@ int main() {
         send(client_socket[0], "Ganaste", sizeof(chat), 0);
         send(client_socket[1], "Perdiste", sizeof(chat), 0);
     } else {
-        send(client_socket[0], "Perdiste", sizeof(chat), 0);
-        send(client_socket[1], "Ganaste", sizeof(chat), 0);
+        send(client_socket[0], "Ganaste", sizeof(chat), 0);
+        send(client_socket[1], "Perdiste", sizeof(chat), 0);
     }
 
     // Cerrar conexiones

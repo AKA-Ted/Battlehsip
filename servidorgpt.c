@@ -54,6 +54,13 @@ int main() {
     }
 
     // Lógica del juego (aquí puedes implementar el juego Battleship)
+    while (1) {
+        for (int i = 0; i < MAX_CONNECTIONS; ++i) {
+            recv(client_sockets[i], cs, 1024, 0);
+            printf("El cliente dijo: %s\n", cs);
+            // Aquí puedes procesar el mensaje recibido del cliente
+        }
+    }
 
     // Cerrar conexiones
     for (int i = 0; i < MAX_CONNECTIONS; ++i) {

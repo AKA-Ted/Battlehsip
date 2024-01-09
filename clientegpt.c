@@ -9,7 +9,6 @@
 #define PORT 12345
 #define SERVER_ADDRESS "127.0.0.1"
 #define BOARD_SIZE 5
-#define NUM_SHIPS 3
 
 // Función para colocar los barcos en el tablero
 void print_board(char board[BOARD_SIZE][BOARD_SIZE]) {
@@ -31,7 +30,10 @@ void print_board(char board[BOARD_SIZE][BOARD_SIZE]) {
 // Función para asignar los barcos en el tablero
 void place_ships(char board[BOARD_SIZE][BOARD_SIZE],
                  bool enemy_ships[BOARD_SIZE][BOARD_SIZE]) {
-    int num_ships_placed = 0;
+    int num_ships;
+    
+    printf("Ingresa cuantos barcos deseas colocar: ");
+    scanf(" %d", &num_ships);
 
     while (num_ships_placed < NUM_SHIPS) {
         char x_char;

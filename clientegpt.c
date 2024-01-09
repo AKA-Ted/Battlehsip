@@ -87,15 +87,22 @@ int main() {
     recv(client_socket, message, sizeof(message), 0);
     printf("%s\n", message);
 
+    // Recibir mensaje de espera
     recv(client_socket, message, sizeof(message), 0);
     printf("%s\n", message);
 
+    // Recibir mensaje de que comianza el juego
     recv(client_socket, message, sizeof(message), 0);
     printf("%s\n", message);
 
+    // Recibir mensaje de que coloque el barco
+    recv(client_socket, message, sizeof(message), 0);
+    printf("%s\n", message);
+
+    // Recibe el tablero
     recv(client_socket, player_board_1, sizeof(player_board_1), 0);
     print_board(player_board_1);
-
+    
     place_ships(player_board_1, enemy_ships_player_1);
 
     send(client_socket, player_board_1, sizeof(player_board_1), 0);

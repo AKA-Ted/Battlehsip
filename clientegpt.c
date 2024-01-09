@@ -11,6 +11,7 @@ int main() {
     int client_socket;
     struct sockaddr_in server_address;
     char message[1024];
+    char chat[1024]
 
     // Crear el socket
     client_socket = socket(AF_INET, SOCK_STREAM, 0);
@@ -39,8 +40,8 @@ int main() {
         printf("%s\n", message);
 
         printf("ingrese una cadena para enviar al server: ");
-        scanf("%*c%[^\n]", message);
-        send(client_socket, message, sizeof(message), 0);
+        scanf("%*c%[^\n]", chat);
+        send(client_socket, chat, sizeof(chat), 0);
     }
 
     // Lógica del juego (aquí puedes implementar la interacción del usuario para el juego Battleship)

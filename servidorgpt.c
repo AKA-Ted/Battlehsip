@@ -11,8 +11,8 @@ int main() {
     int server_socket, client_socket[MAX_CONNECTIONS];
     struct sockaddr_in server_address, client_address;
     socklen_t client_address_len;
-    char message[] = "¡Bienvenido al juego Battleship!";
-    char cs[1024];
+    char message[] = "BATTLESHIP";
+    char chat[1024];
 
     // Crear el socket
     server_socket = socket(AF_INET, SOCK_STREAM, 0);
@@ -57,8 +57,8 @@ int main() {
     // Lógica del juego (aquí puedes implementar el juego Battleship)
     while (1) {
         for (int i = 0; i < MAX_CONNECTIONS; ++i) {
-            recv(client_socket[i], cs, 1024, 0);
-            printf("El cliente dijo: %s\n", cs);
+            recv(client_socket[i], chat, 1024, 0);
+            printf("El jugador %d dijo: %s\n", (i+1), chat);
             // Aquí puedes procesar el mensaje recibido del cliente
         }
     }
@@ -67,6 +67,7 @@ int main() {
     for (int i = 0; i < MAX_CONNECTIONS; ++i) {
         close(client_socket[i]);
     }
+
     close(server_socket);
 
     return 0;

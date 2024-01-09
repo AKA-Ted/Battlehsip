@@ -62,7 +62,7 @@ int main() {
     int turno = 1; 
     char x_char;
     int y;
-    int x 
+    int x;
 
     //Battleships
     char player_board[BOARD_SIZE][BOARD_SIZE];

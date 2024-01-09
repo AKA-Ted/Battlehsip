@@ -28,6 +28,7 @@ void print_board(char board[BOARD_SIZE][BOARD_SIZE]) {
     }
 }
 
+// Función para asignar los barcos en el tablero
 void place_ships(char board[BOARD_SIZE][BOARD_SIZE],
                  bool enemy_ships[BOARD_SIZE][BOARD_SIZE]) {
     int num_ships_placed = 0;
@@ -54,6 +55,7 @@ void place_ships(char board[BOARD_SIZE][BOARD_SIZE],
     }
 }
 
+// Función para jugar el juego
 void play_game(char player_board[BOARD_SIZE][BOARD_SIZE],
                bool enemy_ships[BOARD_SIZE][BOARD_SIZE]) {
     printf("\nDispara al barco enemigo!\n");
@@ -142,6 +144,7 @@ int main() {
 
     place_ships(player_board, enemy_ships_player);
 
+    // Enviar los datos al servidor
     send(client_socket, player_board, sizeof(player_board), 0);
     send(client_socket, enemy_ships_player, sizeof(enemy_ships_player), 0);
 

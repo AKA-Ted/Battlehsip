@@ -41,6 +41,7 @@ void print_board(char board[BOARD_SIZE][BOARD_SIZE]) {
 bool is_game_over(bool enemy_ships_player_1[BOARD_SIZE][BOARD_SIZE], bool enemy_ships_player_2[BOARD_SIZE][BOARD_SIZE]) {
     int remaining_ships_player_1 = 0;
     int remaining_ships_player_2 = 0;
+
     for (int i = 0; i < BOARD_SIZE; i++) {
         for (int j = 0; j < BOARD_SIZE; j++) {
             if (enemy_ships_player_1[i][j]) {
@@ -51,8 +52,6 @@ bool is_game_over(bool enemy_ships_player_1[BOARD_SIZE][BOARD_SIZE], bool enemy_
             }
         }
     }
-    printf("Al jugador 1 le falta tirar %d\n", remaining_ships_player_1);
-    printf("Al jugador 2 le falta tirar %d\n", remaining_ships_player_2);
 
     return (remaining_ships_player_1 == 0 || remaining_ships_player_2 == 0) ;
 }
@@ -61,6 +60,7 @@ bool is_game_over(bool enemy_ships_player_1[BOARD_SIZE][BOARD_SIZE], bool enemy_
 int winner(bool enemy_ships_player_1[BOARD_SIZE][BOARD_SIZE], bool enemy_ships_player_2[BOARD_SIZE][BOARD_SIZE]) {
     int remaining_ships_player_1 = 0;
     int remaining_ships_player_2 = 0;
+
     for (int i = 0; i < BOARD_SIZE; i++) {
         for (int j = 0; j < BOARD_SIZE; j++) {
             if (enemy_ships_player_1[i][j]) {
@@ -71,6 +71,7 @@ int winner(bool enemy_ships_player_1[BOARD_SIZE][BOARD_SIZE], bool enemy_ships_p
             }
         }
     }
+    
     if (remaining_ships_player_1 == 0 && remaining_ships_player_2 > 0) {
         return 2;
     } else if (remaining_ships_player_2 == 0 && remaining_ships_player_1 > 0) {
